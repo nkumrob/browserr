@@ -26,38 +26,40 @@ Add these to your `.env.local` file:
 SUPABASE_URL=https://your-project-id.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 
-# Required for AI-powered resource discovery (ULTRA FAST & CHEAP!)
-GROQ_API_KEY=gsk_your-groq-api-key-here
+# Required for enrichment pipeline
+GROQ_API_KEY=gsk_your-groq-api-key-here          # Mixtral processing (ultra fast & cheap!)
+SERPER_API_KEY=your-serper-api-key-here          # Web search ($5/1K searches)
 
 # Optional for enhanced functionality
+CRAWL4AI_API_KEY=your-crawl4ai-key-here          # Deep content extraction ($3/1K pages)
 GITHUB_TOKEN=ghp_your-github-token-here          # Better GitHub data access
-OPENAI_API_KEY=sk-your-openai-key-here           # Legacy compatibility
-CRAW4AI_API_KEY=your-craw4ai-key-here            # Advanced web scraping
 ```
 
-### 4. AI Resource Discovery (Recommended)
+### 4. Enrichment Pipeline (Recommended)
 
-The system uses **Groq + Mixtral** for ultra-fast, cost-effective external resource discovery:
+The system uses a **3-stage pipeline** for comprehensive, cost-effective enrichment:
 
-#### **🚀 Groq + Mixtral (Recommended)**
-- **Speed**: ~100 tokens per millisecond (10x faster than OpenAI)
-- **Cost**: ~$0.27 per million tokens (100x cheaper than GPT-4)
-- **Quality**: Excellent structured JSON output
-- **Latency**: Sub-100ms for full resource generation
+#### **🔍 Stage 1: Serper.dev Web Search**
+- **Purpose**: Find real URLs with Google-quality search results
+- **Cost**: $5 per 1,000 searches
+- **Finds**: Official sites, docs, packages, tutorials, discussions
 
-#### **📊 Performance Comparison:**
-```
-Processing 1000 MCP servers:
-- Groq + Mixtral: ~5 minutes, $0.41
-- GPT-4o: ~50 minutes, $75.00
-- GPT-3.5: ~20 minutes, $3.00
-```
+#### **🕷️ Stage 2: Crawl4AI Content Extraction**
+- **Purpose**: Deep content extraction from selected pages
+- **Cost**: ~$3 per 1,000 pages (optional)
+- **Extracts**: Installation commands, code examples, features, requirements
 
-#### **🔧 Setup Groq:**
-1. Go to [console.groq.com](https://console.groq.com)
-2. Sign up for free account
-3. Generate API key
-4. Add `GROQ_API_KEY=gsk_your_key` to `.env.local`
+#### **🚀 Stage 3: Mixtral Final Processing**
+- **Purpose**: Generate structured documentation
+- **Cost**: $0.27 per million tokens
+- **Speed**: ~100 tokens per millisecond
+
+#### **💰 Total Cost: ~$0.046 per server (4.6 cents)**
+
+#### **🔧 Setup APIs:**
+1. **Groq**: [console.groq.com](https://console.groq.com) - Free account
+2. **Serper**: [serper.dev](https://serper.dev) - $5/1K searches
+3. **Crawl4AI**: [crawl4ai.com](https://crawl4ai.com) - $3/1K pages (optional)
 
 ### 5. Test Database Connection
 

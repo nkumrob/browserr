@@ -6,14 +6,14 @@ import { SupabaseService } from './supabase-service';
 import { McpRegistryService } from './mcp-registry-service';
 import { ChangeDetectionService } from './change-detection-service';
 import { GitHubService } from './github-service';
-import { HybridEnrichmentPipeline } from './hybrid-enrichment-pipeline';
+import { SerperCrawl4AIEnrichment } from './serper-crawl4ai-enrichment';
 
 export interface DiscoveryConfig {
   // API Keys
-  openaiApiKey: string; // Required for web search
   groqApiKey: string; // Required for final processing
+  serperApiKey: string; // Required for web search
+  crawl4aiApiKey?: string; // Optional for deep content extraction
   githubToken?: string;
-  craw4aiApiKey?: string;
 
   // Database
   supabaseUrl: string;
@@ -23,7 +23,7 @@ export interface DiscoveryConfig {
   batchSize?: number;
   enableChangeDetection?: boolean;
   processingDelay?: number; // ms between processing servers
-  useHybridEnrichment?: boolean; // Use OpenAI + Mixtral hybrid approach
+  useSerperEnrichment?: boolean; // Use Serper + Crawl4AI + Mixtral approach
 }
 
 export interface DiscoveryResult {
@@ -41,15 +41,15 @@ export class McpDiscoveryService {
   private supabaseService: SupabaseService;
   private registryService: McpRegistryService;
   private changeDetectionService: ChangeDetectionService;
-  private hybridEnrichment: HybridEnrichmentPipeline;
+  private serperEnrichment: SerperCrawl4AIEnrichment;
   private config: DiscoveryConfig;
 
   constructor(config: DiscoveryConfig) {
     this.config = {
-      batchSize: 2, // Conservative for OpenAI rate limits in Stage 1
+      batchSize: 3, // Moderate for Serper + Crawl4AI rate limits
       enableChangeDetection: true,
-      processingDelay: 5000, // 5 seconds for OpenAI rate limiting
-      useHybridEnrichment: true, // Default to hybrid OpenAI + Mixtral
+      processingDelay: 2000, // 2 seconds for API rate limiting
+      useSerperEnrichment: true, // Default to Serper + Crawl4AI + Mixtral
       ...config
     };
 
@@ -60,12 +60,12 @@ export class McpDiscoveryService {
       supabaseKey: config.supabaseKey
     });
     this.registryService = new McpRegistryService({
-      openaiApiKey: config.openaiApiKey,
       githubToken: config.githubToken
     });
-    this.hybridEnrichment = new HybridEnrichmentPipeline(
-      config.openaiApiKey,
-      config.groqApiKey
+    this.serperEnrichment = new SerperCrawl4AIEnrichment(
+      config.groqApiKey,
+      config.serperApiKey,
+      config.crawl4aiApiKey
     );
 
     const githubService = new GitHubService(config.githubToken);
