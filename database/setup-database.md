@@ -29,13 +29,43 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 # Required for discovery and enrichment
 OPENAI_API_KEY=sk-your-openai-key-here
 
-# Optional but recommended
+# Optional but recommended for enhanced functionality
 GITHUB_TOKEN=ghp_your-github-token-here
-SERPER_API_KEY=your-serper-key-here
+
+# Web Search APIs (choose one or more)
+SERPER_API_KEY=your-serper-key-here              # Paid, best results
+GOOGLE_API_KEY=your-google-key-here              # Freemium, 100 queries/day free
+GOOGLE_CX=your-custom-search-engine-id           # Required with Google API
+BING_API_KEY=your-bing-key-here                  # Freemium, 1000 queries/month free
+YOUTUBE_API_KEY=your-youtube-key-here            # Freemium, for video discovery
+
+# Advanced scraping (optional)
 CRAW4AI_API_KEY=your-craw4ai-key-here
 ```
 
-### 4. Test Database Connection
+### 4. Web Search Configuration (Optional)
+
+The system supports multiple web search providers for finding external resources:
+
+#### **Option 1: No Web Search (Basic)**
+- Works with just GitHub data
+- Uses static resource patterns
+- Completely free
+
+#### **Option 2: Free Providers**
+- **DuckDuckGo**: Always available, basic results
+- **Reddit API**: Free community discussions
+- **Dev.to API**: Free technical articles
+
+#### **Option 3: Freemium Providers**
+- **Google Custom Search**: 100 queries/day free
+- **Bing Search**: 1000 queries/month free
+- **YouTube API**: Video discovery
+
+#### **Option 4: Paid Providers**
+- **Serper API**: Best results, $50/month for 100k queries
+
+### 5. Test Database Connection
 
 Run this API call to test your setup:
 
