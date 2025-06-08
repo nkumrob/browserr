@@ -1,0 +1,138 @@
+{
+  "originalServer": {
+    "id": "playwright-mcp-example",
+    "slug": "playwright-mcp-server",
+    "name": "playwright-mcp-server",
+    "description": "A comprehensive browser automation server using Playwright for web testing, scraping, and interaction with support for multiple browsers and advanced automation features.",
+    "tags": [
+      "automation",
+      "testing",
+      "browser",
+      "playwright",
+      "web-scraping"
+    ],
+    "category": "browser-automation",
+    "language": "TypeScript",
+    "stars": 1247,
+    "installCommand": "npm install playwright-mcp-server",
+    "githubUrl": "https://github.com/mcp-community/playwright-server",
+    "author": {
+      "name": "MCP Community",
+      "githubUsername": "mcp-community"
+    },
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-06-08T16:45:00Z"
+  },
+  "enrichedServer": {
+    "id": "playwright-mcp-example",
+    "slug": "playwright-mcp-server",
+    "name": "playwright-mcp-server",
+    "description": "A comprehensive browser automation server using Playwright for web testing, scraping, and interaction with support for multiple browsers and advanced automation features.",
+    "tags": [
+      "automation",
+      "testing",
+      "browser",
+      "playwright",
+      "web-scraping",
+      "browser-automation",
+      "typescript",
+      "web-testing"
+    ],
+    "category": "browser-automation",
+    "language": "TypeScript",
+    "stars": 1247,
+    "installCommand": "npm install playwright-mcp-server",
+    "githubUrl": "https://github.com/mcp-community/playwright-server",
+    "author": {
+      "name": "MCP Community",
+      "githubUsername": "mcp-community"
+    },
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-06-08T16:45:00Z",
+    "homepage": "https://github.com/microsoft/playwright",
+    "documentation": "https://playwright.dev/",
+    "npmPackage": "https://www.npmjs.com/package/playwright-mcp-server",
+    "useCases": [
+      {
+        "title": "Web Testing",
+        "description": "Automate web testing across multiple browsers and versions, ensuring cross-browser compatibility and reliability.",
+        "difficulty": "intermediate",
+        "codeExample": "const { test, expect } = require('@playwright/test');"
+      },
+      {
+        "title": "Web Scraping",
+        "description": "Extract data from websites using Playwright's browser automation capabilities, handling anti-scraping measures and CAPTCHAs.",
+        "difficulty": "advanced",
+        "codeExample": "const { _electron } = require('playwright');"
+      },
+      {
+        "title": "Automation",
+        "description": "Automate interactions with web applications, such as filling out forms, clicking buttons, and verifying results.",
+        "difficulty": "beginner",
+        "codeExample": "const { click, fill } = require('playwright');"
+      }
+    ],
+    "installation": {
+      "command": "npm install playwright-mcp-server",
+      "requirements": [
+        "Node.js",
+        "TypeScript",
+        "Playwright"
+      ],
+      "troubleshooting": [
+        "Check Node.js version",
+        "Verify Playwright installation",
+        "Consult GitHub issues"
+      ]
+    },
+    "faqs": [
+      {
+        "question": "What is Playwright?",
+        "answer": "Playwright is a browser automation framework for Node.js, allowing you to automate web browsers in a headless or headed mode."
+      },
+      {
+        "question": "How do I use Playwright with TypeScript?",
+        "answer": "You can use Playwright with TypeScript by installing the `@types/playwright` package and importing it in your TypeScript files."
+      },
+      {
+        "question": "Can I use Playwright for web scraping?",
+        "answer": "Yes, Playwright can be used for web scraping, but be sure to check the website's terms of service and robots.txt file before doing so."
+      }
+    ],
+    "externalResources": [
+      {
+        "title": "Playwright Documentation",
+        "url": "https://playwright.dev/",
+        "type": "documentation",
+        "source": "Playwright",
+        "description": "Official Playwright documentation, covering installation, usage, and API references."
+      },
+      {
+        "title": "Playwright GitHub Repository",
+        "url": "https://github.com/microsoft/playwright",
+        "type": "repository",
+        "source": "GitHub",
+        "description": "Playwright's official GitHub repository, containing source code, issues, and pull requests."
+      },
+      {
+        "title": "Playwright Tutorial by Microsoft",
+        "url": "https://docs.microsoft.com/en-us/learn/modules/playwright-automation/",
+        "type": "tutorial",
+        "source": "Microsoft Learn",
+        "description": "A tutorial on using Playwright for browser automation, covering basic and advanced topics."
+      }
+    ],
+    "relatedTools": [
+      "Selenium",
+      "Cypress",
+      "Puppeteer"
+    ]
+  },
+  "processingStats": {
+    "processingTime": 12567,
+    "searchesMade": 5,
+    "creditsUsed": 25,
+    "cost": 0.0044
+  },
+  "generatedAt": "2025-06-08T19:35:56.746Z"
+}

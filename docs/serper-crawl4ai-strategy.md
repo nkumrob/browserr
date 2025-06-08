@@ -10,7 +10,7 @@
 
 ### **Stage 2: Crawl4AI Content Extraction**
 - **Purpose**: Deep content extraction from selected pages
-- **API**: Crawl4AI for structured data extraction
+- **API**: Crawl4AI (no API key required - uses fallback methods)
 - **Extracts**: Installation commands, code examples, features, requirements
 - **Output**: Rich structured content from each page
 
@@ -38,30 +38,30 @@ Raw GitHub   Real URLs      Rich Content   Structured    Final enriched
 const serperSearches = 6; // 6 searches per server
 const serperCost = (6 / 1000) * 5 = $0.03
 
-// Stage 2: Crawl4AI  
+// Stage 2: Crawl4AI
 const crawl4aiPages = 5; // 5 pages crawled per server
-const crawl4aiCost = (5 / 1000) * 3 = $0.015
+const crawl4aiCost = 0; // FREE - no API key required
 
 // Stage 3: Mixtral via Groq
 const mixtralTokens = 2500; // Final processing
 const mixtralCost = (2500 / 1000000) * 0.27 = $0.0007
 
-// Total per server: $0.0457 (~4.6 cents)
+// Total per server: $0.0307 (~3.1 cents)
 ```
 
 ### **Batch Processing Costs:**
 | Servers | Serper | Crawl4AI | Mixtral | **Total** | Time |
 |---------|--------|----------|---------|-----------|------|
-| 10 | $0.30 | $0.15 | $0.007 | **$0.46** | ~10 min |
-| 100 | $3.00 | $1.50 | $0.07 | **$4.57** | ~100 min |
-| 1000 | $30.00 | $15.00 | $0.68 | **$45.68** | ~16 hours |
+| 10 | $0.30 | $0.00 | $0.007 | **$0.31** | ~10 min |
+| 100 | $3.00 | $0.00 | $0.07 | **$3.07** | ~100 min |
+| 1000 | $30.00 | $0.00 | $0.68 | **$30.68** | ~16 hours |
 
 ### **Comparison with Other Approaches:**
 ```typescript
-// Serper + Crawl4AI + Mixtral: $0.046 per server ✅ Winner
-// OpenAI + Mixtral hybrid: $0.061 per server (33% more expensive)
-// OpenAI only: $0.15 per server (227% more expensive)
-// Manual research: $5-10 per server (10,000%+ more expensive)
+// Serper + Crawl4AI + Mixtral: $0.031 per server ✅ Winner
+// OpenAI + Mixtral hybrid: $0.061 per server (97% more expensive)
+// OpenAI only: $0.15 per server (384% more expensive)
+// Manual research: $5-10 per server (16,000%+ more expensive)
 ```
 
 ## 🚀 **Key Advantages**
@@ -93,12 +93,14 @@ const mixtralCost = (2500 / 1000000) * 0.27 = $0.0007
 GROQ_API_KEY=gsk_your-groq-key-here
 SERPER_API_KEY=your-serper-key-here
 
-# Optional but recommended
-CRAWL4AI_API_KEY=your-crawl4ai-key-here
+# Optional (improves functionality)
+GITHUB_TOKEN=ghp_your-github-token-here
 
-# Database
+# Database (for production)
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Note: Crawl4AI works without API key using fallback methods
 ```
 
 ### **2. Get API Keys:**

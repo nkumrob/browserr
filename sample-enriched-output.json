@@ -1,0 +1,69 @@
+{
+  "id": "test-analysis",
+  "slug": "playwright-mcp-server",
+  "name": "playwright-mcp-server",
+  "description": "Browser automation server for web testing and scraping",
+  "tags": [
+    "automation",
+    "testing", 
+    "browser",
+    "browser-automation",
+    "web-testing",
+    "web-scraping"
+  ],
+  "category": "browser-automation",
+  "language": "TypeScript",
+  "stars": 1500,
+  "installCommand": "npm install playwright-mcp-server",
+  "githubUrl": "https://github.com/test/playwright-mcp-server",
+  "author": {
+    "name": "TestUser",
+    "githubUsername": "testuser"
+  },
+  "created_at": "2025-06-08T19:14:55.432Z",
+  "updated_at": "2025-06-08T19:14:55.432Z",
+  "homepage": "https://github.com/microsoft/playwright-mcp-server",
+  "documentation": "https://playwright.dev/python/docs/intro",
+  "npmPackage": "https://www.npmjs.com/package/playwright-mcp-server",
+  "useCases": [
+    {
+      "title": "Web Scraping",
+      "description": "Extract data from websites",
+      "difficulty": "intermediate"
+    },
+    {
+      "title": "Automated Testing", 
+      "description": "Test web applications",
+      "difficulty": "advanced"
+    }
+  ],
+  "installation": {
+    "command": "npm install playwright-mcp-server",
+    "requirements": [
+      "Node.js",
+      "Playwright"
+    ]
+  },
+  "faqs": [
+    {
+      "question": "What is Playwright?",
+      "answer": "A browser automation framework"
+    },
+    {
+      "question": "What is MCP server?",
+      "answer": "A server for browser automation using Playwright"
+    }
+  ],
+  "externalResources": [
+    {
+      "title": "Playwright Documentation",
+      "url": "https://playwright.dev/python/docs/intro",
+      "type": "documentation",
+      "source": "Playwright"
+    }
+  ],
+  "relatedTools": [
+    "Playwright",
+    "Puppeteer"
+  ]
+}

@@ -1,0 +1,390 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Server Enrichment Report - playwright-mcp-server</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        .section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .section h3 {
+            color: #34495e;
+            margin-top: 25px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            border-left: 4px solid #3498db;
+        }
+        .stat-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .use-case {
+            background: #e8f5e8;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border-left: 4px solid #27ae60;
+        }
+        .use-case h4 {
+            margin: 0 0 8px 0;
+            color: #27ae60;
+        }
+        .difficulty {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .difficulty.beginner { background: #d4edda; color: #155724; }
+        .difficulty.intermediate { background: #fff3cd; color: #856404; }
+        .difficulty.advanced { background: #f8d7da; color: #721c24; }
+        .faq {
+            background: #fff3cd;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border-left: 4px solid #ffc107;
+        }
+        .faq h4 {
+            margin: 0 0 8px 0;
+            color: #856404;
+        }
+        .resource {
+            background: #e7f3ff;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 4px solid #007bff;
+        }
+        .resource h4 {
+            margin: 0 0 5px 0;
+            color: #0056b3;
+        }
+        .tag {
+            display: inline-block;
+            background: #e9ecef;
+            color: #495057;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+        .tag.new {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        .code {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+        .url {
+            color: #007bff;
+            text-decoration: none;
+            word-break: break-all;
+        }
+        .url:hover {
+            text-decoration: underline;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .before, .after {
+            padding: 15px;
+            border-radius: 6px;
+        }
+        .before {
+            background: #fff5f5;
+            border-left: 4px solid #e53e3e;
+        }
+        .after {
+            background: #f0fff4;
+            border-left: 4px solid #38a169;
+        }
+        .footer {
+            text-align: center;
+            color: #7f8c8d;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+        @media print {
+            body { background: white; }
+            .section { box-shadow: none; border: 1px solid #ddd; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>MCP Server Enrichment Report</h1>
+        <p>Intelligent Analysis by Mistral on Groq • Generated June 8, 2025 at 12:35 PM</p>
+    </div>
+
+    <div class="section">
+        <h2>📊 Processing Summary</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">playwright-mcp-server</div>
+                <div class="stat-label">Server Name</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">1,247</div>
+                <div class="stat-label">GitHub Stars</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">TypeScript</div>
+                <div class="stat-label">Language</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">browser-automation</div>
+                <div class="stat-label">Category</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">12.6s</div>
+                <div class="stat-label">Processing Time</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">$0.0044</div>
+                <div class="stat-label">Processing Cost</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📝 Project Information</h2>
+        <p><strong>Description:</strong> A comprehensive browser automation server using Playwright for web testing, scraping, and interaction with support for multiple browsers and advanced automation features.</p>
+        <p><strong>GitHub URL:</strong> <a href="https://github.com/mcp-community/playwright-server" class="url">https://github.com/mcp-community/playwright-server</a></p>
+        <p><strong>Install Command:</strong></p>
+        <div class="code">npm install playwright-mcp-server</div>
+        
+        <h3>🔗 Discovered URLs</h3>
+        <p><strong>Homepage:</strong> <a href="https://github.com/microsoft/playwright" class="url">https://github.com/microsoft/playwright</a></p>
+        <p><strong>Documentation:</strong> <a href="https://playwright.dev/" class="url">https://playwright.dev/</a></p>
+        <p><strong>NPM Package:</strong> <a href="https://www.npmjs.com/package/playwright-mcp-server" class="url">https://www.npmjs.com/package/playwright-mcp-server</a></p>
+    </div>
+
+    <div class="section">
+        <h2>🎯 Use Cases (AI Generated)</h2>
+        
+            <div class="use-case">
+                <h4>Web Testing <span class="difficulty intermediate">intermediate</span></h4>
+                <p>Automate web testing across multiple browsers and versions, ensuring cross-browser compatibility and reliability.</p>
+                <div class="code">const { test, expect } = require('@playwright/test');</div>
+            </div>
+        
+            <div class="use-case">
+                <h4>Web Scraping <span class="difficulty advanced">advanced</span></h4>
+                <p>Extract data from websites using Playwright's browser automation capabilities, handling anti-scraping measures and CAPTCHAs.</p>
+                <div class="code">const { _electron } = require('playwright');</div>
+            </div>
+        
+            <div class="use-case">
+                <h4>Automation <span class="difficulty beginner">beginner</span></h4>
+                <p>Automate interactions with web applications, such as filling out forms, clicking buttons, and verifying results.</p>
+                <div class="code">const { click, fill } = require('playwright');</div>
+            </div>
+        
+    </div>
+
+    <div class="section">
+        <h2>❓ Frequently Asked Questions (AI Generated)</h2>
+        
+            <div class="faq">
+                <h4>Q: What is Playwright?</h4>
+                <p><strong>A:</strong> Playwright is a browser automation framework for Node.js, allowing you to automate web browsers in a headless or headed mode.</p>
+            </div>
+        
+            <div class="faq">
+                <h4>Q: How do I use Playwright with TypeScript?</h4>
+                <p><strong>A:</strong> You can use Playwright with TypeScript by installing the `@types/playwright` package and importing it in your TypeScript files.</p>
+            </div>
+        
+            <div class="faq">
+                <h4>Q: Can I use Playwright for web scraping?</h4>
+                <p><strong>A:</strong> Yes, Playwright can be used for web scraping, but be sure to check the website's terms of service and robots.txt file before doing so.</p>
+            </div>
+        
+    </div>
+
+    <div class="section">
+        <h2>⚙️ Installation & Setup</h2>
+        
+            <p><strong>Primary Command:</strong></p>
+            <div class="code">npm install playwright-mcp-server</div>
+            
+            
+                <h3>Requirements</h3>
+                <ul>
+                    <li>Node.js</li><li>TypeScript</li><li>Playwright</li>
+                </ul>
+            
+            
+            
+                <h3>Troubleshooting Tips</h3>
+                <ul>
+                    <li>Check Node.js version</li><li>Verify Playwright installation</li><li>Consult GitHub issues</li>
+                </ul>
+            
+        
+    </div>
+
+    <div class="section">
+        <h2>🔗 External Resources</h2>
+        
+            <div class="resource">
+                <h4>Playwright Documentation</h4>
+                <p><strong>Type:</strong> documentation | <strong>Source:</strong> Playwright</p>
+                <p><a href="https://playwright.dev/" class="url">https://playwright.dev/</a></p>
+                <p>Official Playwright documentation, covering installation, usage, and API references.</p>
+            </div>
+        
+            <div class="resource">
+                <h4>Playwright GitHub Repository</h4>
+                <p><strong>Type:</strong> repository | <strong>Source:</strong> GitHub</p>
+                <p><a href="https://github.com/microsoft/playwright" class="url">https://github.com/microsoft/playwright</a></p>
+                <p>Playwright's official GitHub repository, containing source code, issues, and pull requests.</p>
+            </div>
+        
+            <div class="resource">
+                <h4>Playwright Tutorial by Microsoft</h4>
+                <p><strong>Type:</strong> tutorial | <strong>Source:</strong> Microsoft Learn</p>
+                <p><a href="https://docs.microsoft.com/en-us/learn/modules/playwright-automation/" class="url">https://docs.microsoft.com/en-us/learn/modules/playwright-automation/</a></p>
+                <p>A tutorial on using Playwright for browser automation, covering basic and advanced topics.</p>
+            </div>
+        
+    </div>
+
+    <div class="section">
+        <h2>🏷️ Tags & Related Tools</h2>
+        
+        <h3>Tags</h3>
+        <div>
+            <span class="tag">automation</span><span class="tag">testing</span><span class="tag">browser</span><span class="tag">playwright</span><span class="tag">web-scraping</span>
+            <span class="tag new">browser-automation (new)</span><span class="tag new">typescript (new)</span><span class="tag new">web-testing (new)</span>
+        </div>
+        
+        
+            <h3>Related Tools</h3>
+            <p>Selenium, Cypress, Puppeteer</p>
+        
+    </div>
+
+    <div class="section">
+        <h2>📈 Processing Analytics</h2>
+        <div class="comparison">
+            <div class="before">
+                <h3>Before Enrichment</h3>
+                <ul>
+                    <li><strong>Tags:</strong> 5</li>
+                    <li><strong>URLs:</strong> 0</li>
+                    <li><strong>Use Cases:</strong> 0</li>
+                    <li><strong>FAQs:</strong> 0</li>
+                    <li><strong>External Resources:</strong> 0</li>
+                </ul>
+            </div>
+            <div class="after">
+                <h3>After Enrichment</h3>
+                <ul>
+                    <li><strong>Tags:</strong> 8 (+3)</li>
+                    <li><strong>URLs:</strong> 3</li>
+                    <li><strong>Use Cases:</strong> 3</li>
+                    <li><strong>FAQs:</strong> 3</li>
+                    <li><strong>External Resources:</strong> 3</li>
+                </ul>
+            </div>
+        </div>
+        
+        <h3>Performance Metrics</h3>
+        <ul>
+            <li><strong>Processing Time:</strong> 12.6 seconds</li>
+            <li><strong>Searches Made:</strong> 5</li>
+            <li><strong>Credits Used:</strong> 25</li>
+            <li><strong>Total Cost:</strong> $0.0044</li>
+            <li><strong>Cost per Second:</strong> $0.000350</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🧠 Mistral Intelligence Analysis</h2>
+        <p>This report demonstrates Mistral's ability to intelligently analyze and structure MCP server information:</p>
+        <ul>
+            <li><strong>Content Analysis:</strong> Processed 170 characters of description and project context</li>
+            <li><strong>Use Case Generation:</strong> Created 3 relevant use cases with appropriate difficulty levels</li>
+            <li><strong>FAQ Generation:</strong> Generated 3 contextually relevant questions and answers</li>
+            <li><strong>Resource Discovery:</strong> Found 3 external resources through web search</li>
+            <li><strong>Tag Enhancement:</strong> Added 3 relevant tags</li>
+            <li><strong>Tool Identification:</strong> Identified 3 related tools in the ecosystem</li>
+        </ul>
+    </div>
+
+    <div class="footer">
+        <p>Generated by MCP Server Enrichment Pipeline • Powered by Mistral on Groq • ScrapingDog + Crawl4AI</p>
+        <p>Cost-effective processing at $0.0044 per server • 78% cheaper than alternatives</p>
+    </div>
+</body>
+</html>

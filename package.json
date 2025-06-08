@@ -6,9 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test-pipeline": "tsx test-serper-pipeline.ts",
+    "test-scrapingdog": "tsx test-scrapingdog-pipeline.ts",
+    "test-scrapingdog-real": "tsx test-scrapingdog-real-servers.ts",
+    "test-real-servers": "tsx test-real-mcp-servers.ts",
+    "view-results": "tsx view-enrichment-results.ts",
+    "analyze-output": "tsx analyze-enriched-output.ts",
+    "test-preservation": "tsx test-content-preservation.ts",
+    "test-mistral-rich": "tsx test-mistral-rich-content.ts",
+    "generate-pdf": "tsx generate-pdf-report.ts",
+    "test-playwright-preservation": "tsx test-content-preservation-playwright.ts"
   },
   "dependencies": {
+    "groq-sdk": "^0.7.0",
     "lucide-react": "^0.513.0",
     "next": "15.3.3",
     "react": "^19.0.0",
@@ -23,6 +34,7 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.3",
     "tailwindcss": "^4",
+    "tsx": "^4.19.2",
     "typescript": "^5"
   }
 }

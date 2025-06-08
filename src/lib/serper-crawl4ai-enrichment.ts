@@ -116,11 +116,11 @@ export class SerperCrawl4AIEnrichment {
     }
   }
 
-  // 🛠 1. Generate Search Queries per JSON Field
+  // 🛠 1. Generate Search Queries per JSON Field (Optimized for Cost)
   private generateSearchQueries(server: McpServer): SearchQuery[] {
     const baseName = server.name.replace(/^mcp-server-?/, '').replace(/-/g, ' ');
-    
-    return [
+
+    const coreQueries = [
       {
         field: 'homepage',
         query: `${baseName} official site`,
@@ -140,24 +140,24 @@ export class SerperCrawl4AIEnrichment {
         expectedDomains: ['docs.', 'readthedocs.io', '.github.io']
       },
       {
+        field: 'useCases',
+        query: `${baseName} examples tutorial`,
+        priority: 3,
+        expectedDomains: ['dev.to', 'medium.com', 'blog.', 'github.com']
+      }
+    ];
+
+    // Only add npm search for JavaScript/TypeScript servers
+    if (server.language === 'JavaScript' || server.language === 'TypeScript') {
+      coreQueries.push({
         field: 'npmPackage',
         query: `${baseName} npm package`,
         priority: 2,
         expectedDomains: ['npmjs.com']
-      },
-      {
-        field: 'useCases',
-        query: `${baseName} real-world use cases`,
-        priority: 3,
-        expectedDomains: ['dev.to', 'medium.com', 'blog.']
-      },
-      {
-        field: 'videoResources',
-        query: `${baseName} tutorial site:youtube.com`,
-        priority: 3,
-        expectedDomains: ['youtube.com', 'youtu.be']
-      }
-    ];
+      });
+    }
+
+    return coreQueries;
   }
 
   // 🔍 2. Execute Searches with Serper.dev
@@ -260,8 +260,8 @@ export class SerperCrawl4AIEnrichment {
   private async crawlSelectedPages(searchResults: SerperResult[]): Promise<CrawledContent[]> {
     const crawledContent: CrawledContent[] = [];
     
-    // Select best URLs for crawling (max 5 to avoid rate limits)
-    const urlsToCrawl = searchResults.slice(0, 5).map(result => result.link);
+    // Select best URLs for crawling (max 3 for cost optimization)
+    const urlsToCrawl = searchResults.slice(0, 3).map(result => result.link);
 
     for (const url of urlsToCrawl) {
       try {
@@ -445,77 +445,43 @@ export class SerperCrawl4AIEnrichment {
   ): Promise<McpServer> {
     
     const completion = await this.groq.chat.completions.create({
-      model: "mixtral-8x7b-32768",
+      model: "llama-3.3-70b-versatile",
       messages: [
         {
           role: "system",
-          content: `You are an expert at creating comprehensive software documentation. Given a project and web research data, create detailed, structured information.
+          content: `Create software documentation from project and web data. Respond with ONLY valid JSON.
 
-CRITICAL: Respond with ONLY valid JSON. No other text.
-
-JSON Schema:
+Schema:
 {
-  "enhancedDescription": "Detailed description based on research",
-  "homepage": "Official website URL or null",
-  "documentation": "Documentation URL or null",
-  "npmPackage": "Package manager URL or null",
-  "useCases": [
-    {
-      "title": "Use case title",
-      "description": "What this accomplishes",
-      "difficulty": "beginner|intermediate|advanced"
-    }
-  ],
-  "installation": {
-    "command": "Primary install command",
-    "requirements": ["List of requirements"],
-    "troubleshooting": ["Common issues"]
-  },
-  "faqs": [
-    {
-      "question": "Common question",
-      "answer": "Helpful answer"
-    }
-  ],
-  "externalResources": [
-    {
-      "title": "Resource title",
-      "url": "Resource URL",
-      "type": "video|blog|tutorial|documentation|discussion",
-      "source": "Platform name"
-    }
-  ],
-  "tags": ["relevant", "tags"],
-  "relatedTools": ["similar", "tools"]
+  "enhancedDescription": "Brief enhanced description",
+  "homepage": "URL or null",
+  "documentation": "URL or null",
+  "npmPackage": "URL or null",
+  "useCases": [{"title": "Title", "description": "Brief desc", "difficulty": "beginner|intermediate|advanced"}],
+  "installation": {"command": "Install command", "requirements": ["Requirements"]},
+  "faqs": [{"question": "Q", "answer": "A"}],
+  "externalResources": [{"title": "Title", "url": "URL", "type": "tutorial|documentation", "source": "Source"}],
+  "tags": ["tags"],
+  "relatedTools": ["tools"]
 }`
         },
         {
           role: "user",
-          content: `Create comprehensive documentation for this MCP server:
+          content: `Create documentation for MCP server: ${server.name}
 
-Original Server:
-${JSON.stringify(server, null, 2)}
+Description: ${server.description}
+Category: ${server.category}
+Language: ${server.language}
 
-Search Results:
-${JSON.stringify(searchResults.slice(0, 5), null, 2)}
+Search URLs found: ${searchResults.slice(0, 3).map(r => r.url).join(', ')}
 
-Crawled Content:
-${JSON.stringify(crawledContent.map(c => ({
-  url: c.url,
-  title: c.title,
-  description: c.metadata.description,
-  installCommands: c.extractedData.installationCommands,
-  features: c.extractedData.features,
-  requirements: c.extractedData.requirements
-})), null, 2)}
+Generate 2 use cases, 2 FAQs, installation info. Use actual URLs from search results. Keep responses concise.
 
-Based on this research data, create comprehensive documentation. Use actual URLs found in the search results. Make it practical and helpful for developers.
-
-Respond with ONLY the JSON object.`
+JSON only:`
         }
       ],
       temperature: 0.3,
-      max_tokens: 4000,
+      max_tokens: 2000, // Reduced for cost optimization
       top_p: 0.9
     });
 
@@ -557,26 +523,26 @@ Respond with ONLY the JSON object.`
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  // Cost estimation
-  estimateCost(serverCount: number): { 
-    serperCost: number; 
-    crawl4aiCost: number; 
-    mixtralCost: number; 
-    totalCost: number 
+  // Cost estimation (optimized)
+  estimateCost(serverCount: number): {
+    serperCost: number;
+    crawl4aiCost: number;
+    llamaCost: number;
+    totalCost: number
   } {
-    const serperSearchesPerServer = 6;
-    const crawl4aiPagesPerServer = 5;
-    const mixtralTokensPerServer = 2500;
+    const serperSearchesPerServer = 4; // Reduced from 6
+    const crawl4aiPagesPerServer = 3; // Reduced from 5
+    const llamaTokensPerServer = 1500; // Reduced from 2500
 
     const serperCost = (serverCount * serperSearchesPerServer / 1000) * 5; // $5 per 1K searches
-    const crawl4aiCost = (serverCount * crawl4aiPagesPerServer / 1000) * 3; // $3 per 1K pages
-    const mixtralCost = (serverCount * mixtralTokensPerServer / 1000000) * 0.27; // $0.27 per 1M tokens
+    const crawl4aiCost = 0; // FREE with fallback methods
+    const llamaCost = (serverCount * llamaTokensPerServer / 1000000) * 0.27; // $0.27 per 1M tokens
 
     return {
       serperCost,
       crawl4aiCost,
-      mixtralCost,
-      totalCost: serperCost + crawl4aiCost + mixtralCost
+      llamaCost,
+      totalCost: serperCost + crawl4aiCost + llamaCost
     };
   }
 }

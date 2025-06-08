@@ -83,6 +83,7 @@ export default function Home() {
             <nav className="hidden md:flex items-center space-x-6">
               <Link href="/servers" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">Browse</Link>
               <Link href="/categories" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">Categories</Link>
+              <Link href="/enriched-demo" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">Enriched Demo</Link>
               <Link href="/submit" className="text-neutral-600 hover:text-neutral-900 font-medium transition-colors">Submit</Link>
               <button className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors font-medium">
                 Sign In

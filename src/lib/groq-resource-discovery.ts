@@ -47,7 +47,7 @@ export class GroqResourceDiscovery {
 
     try {
       const completion = await this.groq.chat.completions.create({
-        model: "mixtral-8x7b-32768",
+        model: "llama-3.3-70b-versatile",
         messages: [
           {
             role: "system",
@@ -118,7 +118,7 @@ Respond with ONLY the JSON array - no other text.`
         resources: enhancedResources,
         tokensUsed,
         processingTime,
-        model: 'mixtral-8x7b-32768'
+        model: 'llama-3.3-70b-versatile'
       };
 
     } catch (error) {
@@ -128,7 +128,7 @@ Respond with ONLY the JSON array - no other text.`
         resources: [],
         tokensUsed: 0,
         processingTime: Date.now() - startTime,
-        model: 'mixtral-8x7b-32768',
+        model: 'llama-3.3-70b-versatile',
         errors: [error instanceof Error ? error.message : String(error)]
       };
     }
@@ -155,7 +155,7 @@ Respond with ONLY the JSON array - no other text.`
       try {
         const batchPrompt = this.createBatchPrompt(batch);
         const completion = await this.groq.chat.completions.create({
-          model: "mixtral-8x7b-32768",
+          model: "llama-3.3-70b-versatile",
           messages: [
             {
               role: "system",
@@ -303,7 +303,7 @@ For each server, create 4-5 realistic, diverse resources. Respond with ONLY the 
             resources: enhancedResources,
             tokensUsed: 0,
             processingTime: 0,
-            model: 'mixtral-8x7b-32768'
+            model: 'llama-3.3-70b-versatile'
           };
         }
       }
