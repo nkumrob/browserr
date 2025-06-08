@@ -6,22 +6,23 @@ import { SupabaseService } from './supabase-service';
 import { McpRegistryService } from './mcp-registry-service';
 import { ChangeDetectionService } from './change-detection-service';
 import { GitHubService } from './github-service';
+import { OpenAIResourceDiscovery } from './openai-resource-discovery';
 
 export interface DiscoveryConfig {
   // API Keys
   openaiApiKey: string;
   githubToken?: string;
-  serperApiKey?: string;
   craw4aiApiKey?: string;
-  
+
   // Database
   supabaseUrl: string;
   supabaseKey: string;
-  
+
   // Processing options
   batchSize?: number;
   enableChangeDetection?: boolean;
   processingDelay?: number; // ms between processing servers
+  useOpenAIForResources?: boolean; // Use OpenAI instead of web search APIs
 }
 
 export interface DiscoveryResult {
@@ -39,6 +40,7 @@ export class McpDiscoveryService {
   private supabaseService: SupabaseService;
   private registryService: McpRegistryService;
   private changeDetectionService: ChangeDetectionService;
+  private openaiResourceDiscovery: OpenAIResourceDiscovery;
   private config: DiscoveryConfig;
 
   constructor(config: DiscoveryConfig) {
@@ -46,6 +48,7 @@ export class McpDiscoveryService {
       batchSize: 10,
       enableChangeDetection: true,
       processingDelay: 2000,
+      useOpenAIForResources: true, // Default to OpenAI-based resource discovery
       ...config
     };
 
@@ -57,9 +60,9 @@ export class McpDiscoveryService {
     });
     this.registryService = new McpRegistryService({
       openaiApiKey: config.openaiApiKey,
-      githubToken: config.githubToken,
-      serperApiKey: config.serperApiKey
+      githubToken: config.githubToken
     });
+    this.openaiResourceDiscovery = new OpenAIResourceDiscovery(config.openaiApiKey);
 
     const githubService = new GitHubService(config.githubToken);
     this.changeDetectionService = new ChangeDetectionService(
