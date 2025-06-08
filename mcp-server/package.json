@@ -1,0 +1,57 @@
+{
+  "name": "mcp-registry-database-server",
+  "version": "1.0.0",
+  "description": "MCP Server for managing the MCP Registry database",
+  "main": "database-mcp-server.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node database-mcp-server.js",
+    "dev": "tsx database-mcp-server.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "database",
+    "supabase",
+    "registry"
+  ],
+  "author": "MCP Registry Team",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0",
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/mcp-registry"
+  },
+  "mcp": {
+    "server": {
+      "name": "mcp-registry-database",
+      "version": "1.0.0",
+      "description": "Database operations for MCP Registry",
+      "tools": [
+        "list_servers",
+        "get_server", 
+        "add_server",
+        "update_server",
+        "search_servers",
+        "discover_servers",
+        "process_enrichment_queue",
+        "get_analytics",
+        "health_check",
+        "get_categories"
+      ]
+    }
+  }
+}
