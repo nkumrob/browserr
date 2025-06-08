@@ -6,11 +6,12 @@ import { SupabaseService } from './supabase-service';
 import { McpRegistryService } from './mcp-registry-service';
 import { ChangeDetectionService } from './change-detection-service';
 import { GitHubService } from './github-service';
-import { OpenAIResourceDiscovery } from './openai-resource-discovery';
+import { HybridEnrichmentPipeline } from './hybrid-enrichment-pipeline';
 
 export interface DiscoveryConfig {
   // API Keys
-  openaiApiKey: string;
+  openaiApiKey: string; // Required for web search
+  groqApiKey: string; // Required for final processing
   githubToken?: string;
   craw4aiApiKey?: string;
 
@@ -22,7 +23,7 @@ export interface DiscoveryConfig {
   batchSize?: number;
   enableChangeDetection?: boolean;
   processingDelay?: number; // ms between processing servers
-  useOpenAIForResources?: boolean; // Use OpenAI instead of web search APIs
+  useHybridEnrichment?: boolean; // Use OpenAI + Mixtral hybrid approach
 }
 
 export interface DiscoveryResult {
@@ -40,15 +41,15 @@ export class McpDiscoveryService {
   private supabaseService: SupabaseService;
   private registryService: McpRegistryService;
   private changeDetectionService: ChangeDetectionService;
-  private openaiResourceDiscovery: OpenAIResourceDiscovery;
+  private hybridEnrichment: HybridEnrichmentPipeline;
   private config: DiscoveryConfig;
 
   constructor(config: DiscoveryConfig) {
     this.config = {
-      batchSize: 10,
+      batchSize: 2, // Conservative for OpenAI rate limits in Stage 1
       enableChangeDetection: true,
-      processingDelay: 2000,
-      useOpenAIForResources: true, // Default to OpenAI-based resource discovery
+      processingDelay: 5000, // 5 seconds for OpenAI rate limiting
+      useHybridEnrichment: true, // Default to hybrid OpenAI + Mixtral
       ...config
     };
 
@@ -62,7 +63,10 @@ export class McpDiscoveryService {
       openaiApiKey: config.openaiApiKey,
       githubToken: config.githubToken
     });
-    this.openaiResourceDiscovery = new OpenAIResourceDiscovery(config.openaiApiKey);
+    this.hybridEnrichment = new HybridEnrichmentPipeline(
+      config.openaiApiKey,
+      config.groqApiKey
+    );
 
     const githubService = new GitHubService(config.githubToken);
     this.changeDetectionService = new ChangeDetectionService(
