@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { MOCK_MCP_SERVERS } from '@/data/mock-servers';
-import { ServerCard } from '@/components/ServerCard';
+import { HorizontalServerCard } from '@/components/HorizontalServerCard';
 import { SearchBar } from '@/components/SearchBar';
 import { Grid, List, Filter, SortAsc } from 'lucide-react';
 import Link from 'next/link';
@@ -182,7 +182,7 @@ export default function ServersPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {searchResults.map((server) => (
                     <Link key={server.id} href={`/servers/${server.id}`}>
-                      <ServerCard server={server} />
+                      <HorizontalServerCard server={server} />
                     </Link>
                   ))}
                 </div>
@@ -190,51 +190,7 @@ export default function ServersPage() {
                 <div className="space-y-4">
                   {searchResults.map((server) => (
                     <Link key={server.id} href={`/servers/${server.id}`}>
-                      <div className="bg-white rounded-xl border border-neutral-200 hover:border-neutral-300 hover:shadow-md transition-all duration-200 p-6">
-                        <div className="flex items-start space-x-4">
-                          <div className="w-12 h-12 bg-neutral-100 rounded-lg flex items-center justify-center text-xl flex-shrink-0">
-                            {server.category === 'browser-automation' && '🤖'}
-                            {server.category === 'data-extraction' && '📊'}
-                            {server.category === 'api-integration' && '🔗'}
-                            {server.category === 'file-processing' && '📄'}
-                            {server.category === 'web-interaction' && '🌐'}
-                            {server.category === 'search' && '🔍'}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-start justify-between mb-2">
-                              <h3 className="text-lg font-semibold text-neutral-900 hover:text-primary-600 transition-colors">
-                                {server.name}
-                              </h3>
-                              <div className="flex items-center text-neutral-600 ml-4">
-                                <span className="text-sm">{server.stars.toLocaleString()} ⭐</span>
-                              </div>
-                            </div>
-                            <p className="text-neutral-600 text-sm mb-3 line-clamp-2">
-                              {server.description}
-                            </p>
-                            <div className="flex items-center space-x-3">
-                              <span className="px-2 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-md">
-                                {server.language}
-                              </span>
-                              <div className="flex flex-wrap gap-1">
-                                {server.tags.slice(0, 3).map((tag, index) => (
-                                  <span
-                                    key={index}
-                                    className="px-2 py-1 bg-neutral-100 text-neutral-600 text-xs rounded-md"
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
-                                {server.tags.length > 3 && (
-                                  <span className="px-2 py-1 bg-neutral-100 text-neutral-600 text-xs rounded-md">
-                                    +{server.tags.length - 3}
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <HorizontalServerCard server={server} />
                     </Link>
                   ))}
                 </div>

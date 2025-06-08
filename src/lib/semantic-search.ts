@@ -11,6 +11,11 @@ export interface McpServer {
   stars: number;
   installCommand: string;
   githubUrl: string;
+  author: {
+    name: string;
+    avatar?: string;
+    githubUsername?: string;
+  };
 }
 
 export interface SearchResult extends McpServer {

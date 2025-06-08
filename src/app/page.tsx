@@ -2,16 +2,35 @@
 
 import { useState } from 'react';
 import { SearchBar } from '@/components/SearchBar';
-import { ServerCard, HorizontalServerCard } from '@/components/ServerCard';
+import { HorizontalServerCard } from '@/components/HorizontalServerCard';
 import { budgetSemanticSearch, SearchResult } from '@/lib/semantic-search';
-import { MOCK_MCP_SERVERS, FEATURED_CATEGORIES } from '@/data/mock-servers';
-import { Sparkles, TrendingUp, Star } from 'lucide-react';
+import { MOCK_MCP_SERVERS } from '@/data/mock-servers';
+import { Sparkles, TrendingUp, Star, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Home() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Scroll functions for carousels
+  const scrollCarousel = (containerId: string, direction: 'left' | 'right') => {
+    const container = document.getElementById(containerId);
+    if (container) {
+      const scrollAmount = 320; // Width of one card plus gap
+      const newScrollLeft = direction === 'left'
+        ? container.scrollLeft - scrollAmount
+        : container.scrollLeft + scrollAmount;
+
+      container.scrollTo({
+        left: newScrollLeft,
+        behavior: 'smooth'
+      });
+    }
+  };
 
   const handleSearch = (query: string, filters?: any) => {
     setIsSearching(true);
@@ -29,6 +48,21 @@ export default function Home() {
     setSearchResults([]);
     setSearchQuery('');
     setIsSearching(false);
+    setSelectedLanguage('');
+    setSelectedCategory('');
+  };
+
+  // Get unique languages and categories for filters
+  const languages = [...new Set(MOCK_MCP_SERVERS.map(s => s.language))].sort();
+  const categories = [...new Set(MOCK_MCP_SERVERS.map(s => s.category))].sort();
+
+  // Filter servers based on selected filters
+  const getFilteredServers = (servers: any[]) => {
+    return servers.filter(server => {
+      const languageMatch = !selectedLanguage || server.language === selectedLanguage;
+      const categoryMatch = !selectedCategory || server.category === selectedCategory;
+      return languageMatch && categoryMatch;
+    });
   };
 
   return (
@@ -95,11 +129,196 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Developer-Focused Sections */}
+      {searchResults.length === 0 && !isSearching && (
+        <>
+          {/* Most Popular */}
+          <section className="py-12 bg-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-neutral-900 flex items-center">
+                    <TrendingUp className="w-6 h-6 mr-2 text-yellow-500" />
+                    Most Popular
+                  </h3>
+                  <p className="text-neutral-600 mt-1">Top-rated servers by the community</p>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => scrollCarousel('popular-carousel', 'left')}
+                      className="p-2 rounded-lg border border-neutral-300 hover:bg-neutral-50 transition-colors"
+                      aria-label="Scroll left"
+                    >
+                      <ChevronLeft className="w-4 h-4 text-neutral-600" />
+                    </button>
+                    <button
+                      onClick={() => scrollCarousel('popular-carousel', 'right')}
+                      className="p-2 rounded-lg border border-neutral-300 hover:bg-neutral-50 transition-colors"
+                      aria-label="Scroll right"
+                    >
+                      <ChevronRight className="w-4 h-4 text-neutral-600" />
+                    </button>
+                  </div>
+                  <Link href="/servers?sort=popular" className="text-primary-600 hover:text-primary-700 font-medium">
+                    View all →
+                  </Link>
+                </div>
+              </div>
+
+              {/* Horizontal scrolling cards */}
+              <div id="popular-carousel" className="flex space-x-3 overflow-x-auto pb-4 scrollbar-hide">
+                {getFilteredServers(MOCK_MCP_SERVERS.sort((a, b) => b.stars - a.stars)).slice(0, 8).map((server) => (
+                  <Link key={server.id} href={`/servers/${server.id}`}>
+                    <HorizontalServerCard server={server} />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Browser Automation */}
+          <section className="py-12 bg-neutral-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-neutral-900 flex items-center">
+                    <span className="mr-2">🤖</span>
+                    Browser Automation
+                  </h3>
+                  <p className="text-neutral-600 mt-1">Automate browsers, testing, and web scraping</p>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => scrollCarousel('automation-carousel', 'left')}
+                      className="p-2 rounded-lg border border-neutral-300 hover:bg-neutral-50 transition-colors"
+                      aria-label="Scroll left"
+                    >
+                      <ChevronLeft className="w-4 h-4 text-neutral-600" />
+                    </button>
+                    <button
+                      onClick={() => scrollCarousel('automation-carousel', 'right')}
+                      className="p-2 rounded-lg border border-neutral-300 hover:bg-neutral-50 transition-colors"
+                      aria-label="Scroll right"
+                    >
+                      <ChevronRight className="w-4 h-4 text-neutral-600" />
+                    </button>
+                  </div>
+                  <Link href="/servers?category=browser-automation" className="text-primary-600 hover:text-primary-700 font-medium">
+                    View all →
+                  </Link>
+                </div>
+              </div>
+
+              {/* Horizontal scrolling cards */}
+              <div id="automation-carousel" className="flex space-x-3 overflow-x-auto pb-4 scrollbar-hide">
+                {getFilteredServers(MOCK_MCP_SERVERS.filter(s => s.category === 'browser-automation' || s.category === 'web-interaction')).map((server) => (
+                  <Link key={server.id} href={`/servers/${server.id}`}>
+                    <HorizontalServerCard server={server} />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* API Integration */}
+          <section className="py-12 bg-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-neutral-900 flex items-center">
+                    <span className="mr-2">🔗</span>
+                    API Integration
+                  </h3>
+                  <p className="text-neutral-600 mt-1">Connect with external APIs and services</p>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => scrollCarousel('api-carousel', 'left')}
+                      className="p-2 rounded-lg border border-neutral-300 hover:bg-neutral-50 transition-colors"
+                      aria-label="Scroll left"
+                    >
+                      <ChevronLeft className="w-4 h-4 text-neutral-600" />
+                    </button>
+                    <button
+                      onClick={() => scrollCarousel('api-carousel', 'right')}
+                      className="p-2 rounded-lg border border-neutral-300 hover:bg-neutral-50 transition-colors"
+                      aria-label="Scroll right"
+                    >
+                      <ChevronRight className="w-4 h-4 text-neutral-600" />
+                    </button>
+                  </div>
+                  <Link href="/servers?category=api-integration" className="text-primary-600 hover:text-primary-700 font-medium">
+                    View all →
+                  </Link>
+                </div>
+              </div>
+
+              {/* Horizontal scrolling cards */}
+              <div id="api-carousel" className="flex space-x-3 overflow-x-auto pb-4 scrollbar-hide">
+                {getFilteredServers(MOCK_MCP_SERVERS.filter(s => s.category === 'api-integration' || s.category === 'search')).map((server) => (
+                  <Link key={server.id} href={`/servers/${server.id}`}>
+                    <HorizontalServerCard server={server} />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Data Processing */}
+          <section className="py-12 bg-neutral-50">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h3 className="text-2xl font-bold text-neutral-900 flex items-center">
+                    <span className="mr-2">📊</span>
+                    Data Processing
+                  </h3>
+                  <p className="text-neutral-600 mt-1">Extract, transform, and process data</p>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => scrollCarousel('data-carousel', 'left')}
+                      className="p-2 rounded-lg border border-neutral-300 hover:bg-neutral-50 transition-colors"
+                      aria-label="Scroll left"
+                    >
+                      <ChevronLeft className="w-4 h-4 text-neutral-600" />
+                    </button>
+                    <button
+                      onClick={() => scrollCarousel('data-carousel', 'right')}
+                      className="p-2 rounded-lg border border-neutral-300 hover:bg-neutral-50 transition-colors"
+                      aria-label="Scroll right"
+                    >
+                      <ChevronRight className="w-4 h-4 text-neutral-600" />
+                    </button>
+                  </div>
+                  <Link href="/servers?category=data-processing" className="text-primary-600 hover:text-primary-700 font-medium">
+                    View all →
+                  </Link>
+                </div>
+              </div>
+
+              {/* Horizontal scrolling cards */}
+              <div id="data-carousel" className="flex space-x-3 overflow-x-auto pb-4 scrollbar-hide">
+                {getFilteredServers(MOCK_MCP_SERVERS.filter(s => s.category === 'data-extraction' || s.category === 'file-processing' || s.category === 'data-integration')).map((server) => (
+                  <Link key={server.id} href={`/servers/${server.id}`}>
+                    <HorizontalServerCard server={server} />
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        </>
+      )}
+
       {/* Search Results */}
       {(searchResults.length > 0 || isSearching) && (
         <section className="py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-2xl font-bold text-neutral-900">
                   {isSearching ? (
@@ -117,47 +336,92 @@ export default function Home() {
                   </p>
                 )}
               </div>
-              <button
-                onClick={clearSearch}
-                className="text-neutral-600 hover:text-neutral-800 underline"
-              >
-                Clear search
-              </button>
+              <div className="flex items-center space-x-3">
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="flex items-center space-x-2 px-3 py-2 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition-colors"
+                >
+                  <Filter className="w-4 h-4 text-neutral-600" />
+                  <span className="text-neutral-600">Filters</span>
+                </button>
+                <button
+                  onClick={clearSearch}
+                  className="text-neutral-600 hover:text-neutral-800 underline"
+                >
+                  Clear search
+                </button>
+              </div>
             </div>
 
+            {/* Filters */}
+            {showFilters && (
+              <div className="bg-neutral-50 rounded-lg p-4 mb-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-700 mb-2">Language</label>
+                    <select
+                      value={selectedLanguage}
+                      onChange={(e) => setSelectedLanguage(e.target.value)}
+                      className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    >
+                      <option value="">All Languages</option>
+                      {languages.map(lang => (
+                        <option key={lang} value={lang}>{lang}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-neutral-700 mb-2">Category</label>
+                    <select
+                      value={selectedCategory}
+                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      className="w-full px-3 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    >
+                      <option value="">All Categories</option>
+                      {categories.map(cat => (
+                        <option key={cat} value={cat}>{cat.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {isSearching ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                 {[...Array(6)].map((_, i) => (
-                  <div key={i} className="bg-white rounded-xl border border-neutral-200 p-6 animate-pulse">
-                    <div className="flex items-center space-x-3 mb-4">
-                      <div className="w-12 h-12 bg-neutral-200 rounded-lg"></div>
-                      <div className="flex-1">
-                        <div className="h-4 bg-neutral-200 rounded mb-2"></div>
-                        <div className="h-3 bg-neutral-200 rounded w-1/2"></div>
+                  <div key={i} className="bg-white rounded-xl border border-neutral-200 h-[180px] animate-pulse">
+                    <div className="p-5">
+                      <div className="flex items-start space-x-3">
+                        <div className="w-12 h-12 bg-neutral-200 rounded-lg flex-shrink-0"></div>
+                        <div className="flex-1">
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="h-4 bg-neutral-200 rounded w-3/4"></div>
+                            <div className="h-4 bg-neutral-200 rounded w-12"></div>
+                          </div>
+                          <div className="space-y-2 mb-3">
+                            <div className="h-3 bg-neutral-200 rounded"></div>
+                            <div className="h-3 bg-neutral-200 rounded w-4/5"></div>
+                          </div>
+                          <div className="flex items-center justify-between mt-auto">
+                            <div className="h-6 bg-neutral-200 rounded w-16"></div>
+                            <div className="flex space-x-1">
+                              <div className="h-6 w-6 bg-neutral-200 rounded"></div>
+                              <div className="h-6 w-6 bg-neutral-200 rounded"></div>
+                              <div className="h-6 bg-neutral-200 rounded w-16"></div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="space-y-2 mb-4">
-                      <div className="h-3 bg-neutral-200 rounded"></div>
-                      <div className="h-3 bg-neutral-200 rounded"></div>
-                      <div className="h-3 bg-neutral-200 rounded w-3/4"></div>
-                    </div>
-                    <div className="flex space-x-2 mb-4">
-                      <div className="h-5 w-12 bg-neutral-200 rounded"></div>
-                      <div className="h-5 w-16 bg-neutral-200 rounded"></div>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {searchResults.map((result) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                {getFilteredServers(searchResults).map((result) => (
                   <Link key={result.id} href={`/servers/${result.id}`}>
-                    <ServerCard
-                      server={result}
-                      showMatchReasons={true}
-                      matchReasons={result.matchReasons}
-                      relevanceScore={result.relevanceScore}
-                    />
+                    <HorizontalServerCard server={result} />
                   </Link>
                 ))}
               </div>
@@ -166,38 +430,7 @@ export default function Home() {
         </section>
       )}
 
-      {/* Featured Sections - Only show when not searching */}
-      {searchResults.length === 0 && !isSearching && (
-        <>
-          {FEATURED_CATEGORIES.map((category, categoryIndex) => (
-            <section key={categoryIndex} className={`py-12 ${categoryIndex % 2 === 0 ? 'bg-white' : 'bg-neutral-50'}`}>
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between mb-8">
-                  <h3 className="text-2xl font-bold text-neutral-900 flex items-center">
-                    {categoryIndex === 0 && <Star className="w-6 h-6 mr-2 text-yellow-500" />}
-                    {categoryIndex === 1 && <span className="mr-2">🤖</span>}
-                    {categoryIndex === 2 && <span className="mr-2">📊</span>}
-                    {categoryIndex === 3 && <span className="mr-2">🔗</span>}
-                    {category.title}
-                  </h3>
-                  <button className="text-primary-600 hover:text-primary-700 font-medium">
-                    View all →
-                  </button>
-                </div>
 
-                {/* Horizontal scrolling cards */}
-                <div className="flex space-x-6 overflow-x-auto pb-4 scrollbar-hide">
-                  {category.servers.map((server) => (
-                    <Link key={server.id} href={`/servers/${server.id}`}>
-                      <HorizontalServerCard server={server} />
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </section>
-          ))}
-        </>
-      )}
 
       {/* Footer */}
       <footer className="bg-white border-t border-neutral-200 py-12">

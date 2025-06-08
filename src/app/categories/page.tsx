@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { MOCK_MCP_SERVERS } from '@/data/mock-servers';
-import { ServerCard } from '@/components/ServerCard';
+import { HorizontalServerCard } from '@/components/HorizontalServerCard';
 import { Search, Filter } from 'lucide-react';
 import Link from 'next/link';
 
@@ -149,7 +149,7 @@ export default function CategoriesPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {filteredServers.map((server) => (
                   <Link key={server.id} href={`/servers/${server.id}`}>
-                    <ServerCard server={server} />
+                    <HorizontalServerCard server={server} />
                   </Link>
                 ))}
               </div>

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import { MOCK_MCP_SERVERS } from '@/data/mock-servers';
-import { Star, Download, ExternalLink, Code, Copy, CheckCircle, Heart, ArrowLeft, Play, Book, Users, Calendar, GitBranch, ChevronDown, ChevronUp, Settings, Zap, Shield, FileText, Terminal, Package } from 'lucide-react';
+import { Star, Download, ExternalLink, Code, Copy, CheckCircle, Heart, ArrowLeft, Play, Book, Users, Calendar, GitBranch, ChevronDown, ChevronUp, Settings, Zap, Shield, FileText, Terminal, Package, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ServerDetailsPage() {
@@ -258,6 +258,7 @@ const results = await client.batch([
     { id: 'overview', label: 'Overview', icon: Book },
     { id: 'installation', label: 'Installation', icon: Download },
     { id: 'playground', label: 'Playground', icon: Play },
+    { id: 'resources', label: 'Resources', icon: FileText },
     { id: 'community', label: 'Community', icon: Users },
   ];
 
@@ -356,6 +357,29 @@ const results = await client.batch([
                   <span className={`px-3 py-1 rounded-md text-sm font-medium border ${getLanguageColor(server.language)}`}>
                     {server.language}
                   </span>
+                  {/* Action icons moved closer to title */}
+                  <div className="flex items-center space-x-2 ml-2">
+                    <button
+                      onClick={() => handleCopy(server.installCommand)}
+                      className="p-2 rounded-lg border border-neutral-300 hover:bg-neutral-50 transition-colors"
+                      title="Copy install command"
+                    >
+                      {copied ? (
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                      ) : (
+                        <Copy className="w-4 h-4 text-neutral-600" />
+                      )}
+                    </button>
+                    <a
+                      href={server.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 rounded-lg border border-neutral-300 hover:bg-neutral-50 transition-colors"
+                      title="View on GitHub"
+                    >
+                      <ExternalLink className="w-4 h-4 text-neutral-600" />
+                    </a>
+                  </div>
                 </div>
                 <p className="text-lg text-neutral-600 mb-4 max-w-3xl">{server.description}</p>
                 <div className="flex items-center space-x-6 text-sm text-neutral-600">
@@ -375,28 +399,8 @@ const results = await client.batch([
               </div>
             </div>
 
-            {/* Server Actions */}
-            <div className="flex items-center space-x-3">
-              <button
-                onClick={() => handleCopy(server.installCommand)}
-                className="p-3 rounded-lg border border-neutral-300 hover:bg-neutral-50 transition-colors"
-                title="Copy install command"
-              >
-                {copied ? (
-                  <CheckCircle className="w-5 h-5 text-green-600" />
-                ) : (
-                  <Copy className="w-5 h-5 text-neutral-600" />
-                )}
-              </button>
-              <a
-                href={server.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 rounded-lg border border-neutral-300 hover:bg-neutral-50 transition-colors"
-                title="View on GitHub"
-              >
-                <ExternalLink className="w-5 h-5 text-neutral-600" />
-              </a>
+            {/* Install Button */}
+            <div className="flex items-center">
               <button className="inline-flex items-center px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition-colors">
                 <Download className="w-5 h-5 mr-2" />
                 Install
@@ -945,6 +949,291 @@ print(result)`}
                           </pre>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'resources' && (
+                <div className="space-y-6">
+                  {/* Documentation */}
+                  <div className="bg-white rounded-xl border border-neutral-200 p-6">
+                    <h2 className="text-xl font-bold text-neutral-900 mb-4 flex items-center">
+                      <FileText className="w-5 h-5 mr-2 text-primary-600" />
+                      Documentation & Guides
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <a href="#" className="flex items-start space-x-3 p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Book className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-neutral-900">Getting Started Guide</h3>
+                          <p className="text-sm text-neutral-600 mt-1">Complete setup and installation instructions</p>
+                        </div>
+                      </a>
+                      <a href="#" className="flex items-start space-x-3 p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                          <Code className="w-5 h-5 text-green-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-neutral-900">API Reference</h3>
+                          <p className="text-sm text-neutral-600 mt-1">Detailed API documentation with examples</p>
+                        </div>
+                      </a>
+                      <a href="#" className="flex items-start space-x-3 p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                        <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                          <Terminal className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-neutral-900">CLI Reference</h3>
+                          <p className="text-sm text-neutral-600 mt-1">Command line interface documentation</p>
+                        </div>
+                      </a>
+                      <a href="#" className="flex items-start space-x-3 p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                        <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                          <Package className="w-5 h-5 text-orange-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-neutral-900">Examples & Tutorials</h3>
+                          <p className="text-sm text-neutral-600 mt-1">Real-world examples and step-by-step tutorials</p>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Video Resources */}
+                  <div className="bg-white rounded-xl border border-neutral-200 p-6">
+                    <h2 className="text-xl font-bold text-neutral-900 mb-4 flex items-center">
+                      <Play className="w-5 h-5 mr-2 text-primary-600" />
+                      Video Resources
+                    </h2>
+                    <div className="space-y-4">
+                      <a href="#" className="flex items-start space-x-4 p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                        <div className="w-16 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                          <Play className="w-6 h-6 text-red-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-neutral-900">Getting Started with {server.name}</h3>
+                          <p className="text-sm text-neutral-600 mt-1">A comprehensive introduction to the server and its capabilities</p>
+                          <div className="flex items-center space-x-4 mt-2 text-xs text-neutral-500">
+                            <span>15:30</span>
+                            <span>•</span>
+                            <span>12K views</span>
+                            <span>•</span>
+                            <span>2 weeks ago</span>
+                          </div>
+                        </div>
+                      </a>
+                      <a href="#" className="flex items-start space-x-4 p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                        <div className="w-16 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                          <Play className="w-6 h-6 text-red-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-neutral-900">Advanced Configuration & Best Practices</h3>
+                          <p className="text-sm text-neutral-600 mt-1">Learn advanced configuration options and optimization techniques</p>
+                          <div className="flex items-center space-x-4 mt-2 text-xs text-neutral-500">
+                            <span>28:45</span>
+                            <span>•</span>
+                            <span>8.5K views</span>
+                            <span>•</span>
+                            <span>1 month ago</span>
+                          </div>
+                        </div>
+                      </a>
+                      <a href="#" className="flex items-start space-x-4 p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                        <div className="w-16 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+                          <Play className="w-6 h-6 text-red-600" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-neutral-900">Real-world Use Cases & Examples</h3>
+                          <p className="text-sm text-neutral-600 mt-1">See how developers are using this server in production</p>
+                          <div className="flex items-center space-x-4 mt-2 text-xs text-neutral-500">
+                            <span>22:15</span>
+                            <span>•</span>
+                            <span>6.2K views</span>
+                            <span>•</span>
+                            <span>3 weeks ago</span>
+                          </div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Community Discussions */}
+                  <div className="bg-white rounded-xl border border-neutral-200 p-6">
+                    <h2 className="text-xl font-bold text-neutral-900 mb-4 flex items-center">
+                      <Users className="w-5 h-5 mr-2 text-primary-600" />
+                      Community Discussions
+                    </h2>
+
+                    {/* Latest Discussions */}
+                    <div className="mb-6">
+                      <h3 className="text-lg font-semibold text-neutral-900 mb-3">Latest Discussions</h3>
+                      <div className="space-y-3">
+                        <a href="#" className="block p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                          <div className="flex items-start space-x-3">
+                            <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                              <span className="text-blue-600 font-semibold text-sm">JD</span>
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-medium text-neutral-900">How to handle authentication with {server.name}?</h4>
+                              <p className="text-sm text-neutral-600 mt-1">Looking for best practices when implementing auth flows...</p>
+                              <div className="flex items-center space-x-4 mt-2 text-xs text-neutral-500">
+                                <span>by john_dev</span>
+                                <span>•</span>
+                                <span>2 hours ago</span>
+                                <span>•</span>
+                                <span>5 replies</span>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+
+                        <a href="#" className="block p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                          <div className="flex items-start space-x-3">
+                            <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                              <span className="text-green-600 font-semibold text-sm">SM</span>
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-medium text-neutral-900">Performance optimization tips</h4>
+                              <p className="text-sm text-neutral-600 mt-1">Sharing some performance improvements I discovered...</p>
+                              <div className="flex items-center space-x-4 mt-2 text-xs text-neutral-500">
+                                <span>by sarah_m</span>
+                                <span>•</span>
+                                <span>6 hours ago</span>
+                                <span>•</span>
+                                <span>12 replies</span>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+
+                        <a href="#" className="block p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                          <div className="flex items-start space-x-3">
+                            <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                              <span className="text-purple-600 font-semibold text-sm">AL</span>
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-medium text-neutral-900">Integration with Docker containers</h4>
+                              <p className="text-sm text-neutral-600 mt-1">Has anyone successfully deployed this in a containerized environment?</p>
+                              <div className="flex items-center space-x-4 mt-2 text-xs text-neutral-500">
+                                <span>by alex_l</span>
+                                <span>•</span>
+                                <span>1 day ago</span>
+                                <span>•</span>
+                                <span>8 replies</span>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+
+                    {/* Popular Discussions */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-neutral-900 mb-3">Popular Discussions</h3>
+                      <div className="space-y-3">
+                        <a href="#" className="block p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                          <div className="flex items-start space-x-3">
+                            <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
+                              <span className="text-orange-600 font-semibold text-sm">MK</span>
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-medium text-neutral-900">Complete setup guide for beginners</h4>
+                              <p className="text-sm text-neutral-600 mt-1">Step-by-step tutorial for getting started with {server.name}</p>
+                              <div className="flex items-center space-x-4 mt-2 text-xs text-neutral-500">
+                                <span>by mike_k</span>
+                                <span>•</span>
+                                <span>3 days ago</span>
+                                <span>•</span>
+                                <span>24 replies</span>
+                                <span>•</span>
+                                <span className="flex items-center">
+                                  <Star className="w-3 h-3 mr-1 fill-yellow-400 text-yellow-400" />
+                                  <span>Pinned</span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+
+                        <a href="#" className="block p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                          <div className="flex items-start space-x-3">
+                            <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
+                              <span className="text-red-600 font-semibold text-sm">LW</span>
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-medium text-neutral-900">Common issues and solutions</h4>
+                              <p className="text-sm text-neutral-600 mt-1">Troubleshooting guide for the most frequent problems</p>
+                              <div className="flex items-center space-x-4 mt-2 text-xs text-neutral-500">
+                                <span>by lisa_w</span>
+                                <span>•</span>
+                                <span>1 week ago</span>
+                                <span>•</span>
+                                <span>31 replies</span>
+                                <span>•</span>
+                                <span className="flex items-center">
+                                  <TrendingUp className="w-3 h-3 mr-1 text-green-500" />
+                                  <span>Trending</span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-neutral-200">
+                      <a href="#" className="text-primary-600 hover:text-primary-700 font-medium text-sm">
+                        View all discussions →
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* External Resources */}
+                  <div className="bg-white rounded-xl border border-neutral-200 p-6">
+                    <h2 className="text-xl font-bold text-neutral-900 mb-4 flex items-center">
+                      <ExternalLink className="w-5 h-5 mr-2 text-primary-600" />
+                      External Resources
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <a href="#" className="flex items-center space-x-3 p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                        <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                          <ExternalLink className="w-5 h-5 text-gray-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-neutral-900">Official Blog</h3>
+                          <p className="text-sm text-neutral-600">Latest updates and announcements</p>
+                        </div>
+                      </a>
+                      <a href="#" className="flex items-center space-x-3 p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <Users className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-neutral-900">Community Forum</h3>
+                          <p className="text-sm text-neutral-600">Ask questions and share knowledge</p>
+                        </div>
+                      </a>
+                      <a href="#" className="flex items-center space-x-3 p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                          <Book className="w-5 h-5 text-green-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-neutral-900">Third-party Tutorials</h3>
+                          <p className="text-sm text-neutral-600">Community-created learning resources</p>
+                        </div>
+                      </a>
+                      <a href="#" className="flex items-center space-x-3 p-4 rounded-lg border border-neutral-200 hover:border-primary-300 hover:bg-primary-50 transition-colors">
+                        <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                          <Star className="w-5 h-5 text-yellow-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-neutral-900">Awesome List</h3>
+                          <p className="text-sm text-neutral-600">Curated list of related tools and resources</p>
+                        </div>
+                      </a>
                     </div>
                   </div>
                 </div>

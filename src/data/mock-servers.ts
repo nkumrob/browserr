@@ -12,7 +12,11 @@ export const MOCK_MCP_SERVERS: McpServer[] = [
     language: 'TypeScript',
     stars: 245,
     installCommand: 'npx @modelcontextprotocol/server-brave-search',
-    githubUrl: 'https://github.com/modelcontextprotocol/servers/tree/main/src/brave-search'
+    githubUrl: 'https://github.com/modelcontextprotocol/servers/tree/main/src/brave-search',
+    author: {
+      name: 'ModelContext Team',
+      githubUsername: 'modelcontextprotocol'
+    }
   },
   {
     id: '2',

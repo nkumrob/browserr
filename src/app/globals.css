@@ -35,6 +35,16 @@ body {
   display: none;
 }
 
+/* Smooth scroll behavior for horizontal carousels */
+.overflow-x-auto {
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+}
+
+.overflow-x-auto > * {
+  scroll-snap-align: start;
+}
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
