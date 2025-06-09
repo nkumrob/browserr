@@ -1,12 +1,43 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { SearchBar } from '@/components/SearchBar';
 import { HorizontalServerCard } from '@/components/HorizontalServerCard';
 import { budgetSemanticSearch, SearchResult } from '@/lib/semantic-search';
 import { MOCK_MCP_SERVERS } from '@/data/mock-servers';
 import { Sparkles, TrendingUp, Star, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import Link from 'next/link';
+
+// Simple interface for processed servers
+interface ProcessedServer {
+  id: string;
+  name: string;
+  description: string;
+  tags: string[];
+  category: string;
+  language: string;
+  stars: number;
+  installCommand: string;
+  githubUrl: string;
+  author: {
+    name: string;
+    githubUsername: string;
+  };
+  createdAt: string;
+}
+
+// Get processed servers from localStorage
+function getProcessedServers(): ProcessedServer[] {
+  if (typeof window === 'undefined') return [];
+
+  try {
+    const stored = localStorage.getItem('mcp-processed-servers');
+    return stored ? JSON.parse(stored) : [];
+  } catch (error) {
+    console.warn('Failed to load processed servers:', error);
+    return [];
+  }
+}
 
 export default function Home() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
@@ -15,6 +46,25 @@ export default function Home() {
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [showFilters, setShowFilters] = useState(false);
+  const [processedServers, setProcessedServers] = useState<ProcessedServer[]>([]);
+
+  // Load processed servers on mount and listen for updates
+  useEffect(() => {
+    const loadProcessedServers = () => {
+      const servers = getProcessedServers();
+      setProcessedServers(servers);
+    };
+
+    // Load initial data
+    loadProcessedServers();
+
+    // Listen for updates
+    window.addEventListener('processedServersUpdated', loadProcessedServers);
+
+    return () => {
+      window.removeEventListener('processedServersUpdated', loadProcessedServers);
+    };
+  }, []);
 
   // Scroll functions for carousels
   const scrollCarousel = (containerId: string, direction: 'left' | 'right') => {
@@ -114,11 +164,11 @@ export default function Home() {
             <div className="flex items-center justify-center space-x-8 text-sm text-neutral-600">
               <div className="flex items-center">
                 <Sparkles className="w-4 h-4 mr-2 text-primary-500" />
-                {MOCK_MCP_SERVERS.length} Servers
+                {MOCK_MCP_SERVERS.length + processedServers.length} Servers
               </div>
               <div className="flex items-center">
-                <TrendingUp className="w-4 h-4 mr-2 text-secondary-500" />
-                $0 Monthly Cost
+                <TrendingUp className="w-4 h-4 mr-2 text-green-500" />
+                {processedServers.length} Processed
               </div>
               <div className="flex items-center">
                 <Star className="w-4 h-4 mr-2 text-yellow-500" />
@@ -132,6 +182,70 @@ export default function Home() {
       {/* Developer-Focused Sections */}
       {searchResults.length === 0 && !isSearching && (
         <>
+          {/* Recently Added Servers */}
+          {processedServers.length > 0 && (
+            <section className="py-12 bg-green-50">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h3 className="text-2xl font-bold text-neutral-900 flex items-center">
+                      <Sparkles className="w-6 h-6 mr-2 text-green-500" />
+                      Recently Added
+                      <span className="ml-3 px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">
+                        NEW
+                      </span>
+                    </h3>
+                    <p className="text-neutral-600 mt-1">Latest servers processed through our E2E pipeline</p>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => scrollCarousel('recent-carousel', 'left')}
+                        className="p-2 rounded-lg border border-green-300 hover:bg-green-100 transition-colors"
+                        aria-label="Scroll left"
+                      >
+                        <ChevronLeft className="w-4 h-4 text-green-600" />
+                      </button>
+                      <button
+                        onClick={() => scrollCarousel('recent-carousel', 'right')}
+                        className="p-2 rounded-lg border border-green-300 hover:bg-green-100 transition-colors"
+                        aria-label="Scroll right"
+                      >
+                        <ChevronRight className="w-4 h-4 text-green-600" />
+                      </button>
+                    </div>
+                    <span className="text-green-600 font-medium">
+                      {processedServers.length} processed
+                    </span>
+                  </div>
+                </div>
+
+                {/* Horizontal scrolling cards */}
+                <div id="recent-carousel" className="flex space-x-3 overflow-x-auto pb-4 scrollbar-hide">
+                  {processedServers.length > 0 ? processedServers.slice(0, 8).map((server) => (
+                    <Link key={server.id} href={`/servers/${server.id}`}>
+                      <div className="relative">
+                        <HorizontalServerCard server={server} />
+                        <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full font-medium shadow-lg">
+                          NEW
+                        </div>
+                      </div>
+                    </Link>
+                  )) : (
+                    <div className="flex items-center justify-center w-full py-8">
+                      <div className="text-center">
+                        <p className="text-neutral-600 mb-2">No processed servers yet</p>
+                        <Link href="/test-e2e" className="text-green-600 hover:text-green-700 font-medium">
+                          Process a server →
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+          )}
+
           {/* Most Popular */}
           <section className="py-12 bg-white">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

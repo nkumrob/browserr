@@ -16,6 +16,31 @@ export interface McpServer {
     avatar?: string;
     githubUsername?: string;
   };
+  extracted_resources?: {
+    video_links: string[];
+    documentation_links: string[];
+    tutorial_links: string[];
+    example_links: string[];
+    demo_links: string[];
+    installation_section?: string;
+    code_examples: Array<{
+      title: string;
+      code: string;
+      language: string;
+    }>;
+    api_documentation?: string;
+  };
+  preserved_content?: {
+    full_description: string;
+    features: string;
+    installation_instructions: string;
+    usage_examples: string;
+    api_documentation: string;
+    contributing: string;
+    license: string;
+    changelog: string;
+    troubleshooting: string;
+  };
 }
 
 export interface SearchResult extends McpServer {
